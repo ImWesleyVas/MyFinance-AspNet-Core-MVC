@@ -12,6 +12,10 @@ namespace MyFinance.Controllers
     {
         public IActionResult Index()
         {
+            HomeModel objHomeModel = new HomeModel();
+            string nome = objHomeModel.LerNomeUsuario(); 
+            ViewData["Nome"] = nome;
+
             return View();
         }
 
