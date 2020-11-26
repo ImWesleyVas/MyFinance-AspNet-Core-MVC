@@ -45,5 +45,28 @@ namespace MyFinance.Controllers
                 return RedirectToAction("Login");
             }
         }
+       
+
+        public IActionResult Registrar()
+        {
+           return View();
+        }
+
+        [HttpPost]
+        public IActionResult Registrar(UsuarioModel usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                usuario.RegistrarUsuario();
+                return RedirectToAction("Sucesso");
+            }
+            return View();
+        }
+
+        public IActionResult Sucesso()
+        {
+            return View();
+        }
+
     }
 }
