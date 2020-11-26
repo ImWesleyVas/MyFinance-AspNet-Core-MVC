@@ -15,8 +15,21 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <script>
+        function CarragarUsuarioLogado() {
+            var nome = '@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")'
+            if (nome != "")
+            {
+                var divNome = document.getElementById("NomeUsuarioLogado");
+                divNome.innerHTML = "Olá " + nome + " <a href='Usuario/Login/0'> (Sair)</a>";
+                divNome.style = "color:#FFFFFF; text-align:right; height:50px; padding-top:12px;"
+            }
+            
+        }
+    </script>
+
 </head>
-<body>
+<body onload="CarragarUsuarioLogado()">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -34,13 +47,18 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
+
+                @using Microsoft.AspNetCore.Http;
+                @inject IHttpContextAccessor HttpContextAccessor
+
+            <div style="color:#ffffff">  <div id="NomeUsuarioLogado" style="color:#ffffff"></div> </div>
             </div>
         </div>
     </nav>
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content">
+    <div class="container body-content" style="padding-top: 25px">
         @RenderBody()
         <hr />
         <footer>
@@ -71,4 +89,9 @@
 
     @RenderSection("Scripts", required: false)
 </body>
+
+
+
 </html>
+
+
