@@ -1,7 +1,45 @@
-﻿
+﻿@model IEnumerable<ContaModel>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Minhas contas</h2>
 
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>@Html.DisplayNameFor(model => model.Id)</th>
+        <th>@Html.DisplayNameFor(model => model.Nome)</th>
+        <th>@Html.DisplayNameFor(model => model.Saldo)</th>
+
+    </tr>
+
+    @{
+        foreach (var item in (List<ContaModel>)ViewBag.ListaConta)
+        {
+            <tbody>
+                <tr>
+                    <td><button type="button" class="btn btn-danger" onclick="Excluir(@item.Id.ToString())">Excluir</button></td>
+                    <td>@item.Id</td>
+                    <td>@item.Nome</td>
+                    <td>@item.Saldo</td>
+                </tr>
+            </tbody>
+        }
+    }
+
+</table>
+<button type="button" class="btn btn-block btn-primary" onclick="CriarConta()">Criar conta</button>
+
+<script>
+    function CriarConta()
+    {
+        window.location.href = "../Conta/CriarConta";
+    }
+
+    function Excluir(id_conta)
+    {
+        window.location.href = "../Conta/ExcluirConta/" + id_conta;
+    }
+
+</script>
