@@ -17,6 +17,8 @@ namespace MyFinance.Models
         [Required(ErrorMessage = "Informe o saldo inicial da conta!")]
         public double Saldo { get; set; }
         public int Usuario_id { get; set; }
+        
+        //obter o contexto
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
 
