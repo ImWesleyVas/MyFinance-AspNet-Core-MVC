@@ -14,6 +14,7 @@ namespace MyFinance.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Informa a data!")]
         public string Data { get; set; }
+        public string DataFinal { get; set; }//para uso no filtro dos relatórios
         public string Tipo { get; set; }
         public double Valor { get; set; }
         [Required(ErrorMessage = "Informa a descricão!")]
@@ -44,11 +45,37 @@ namespace MyFinance.Models
             List<TransacaoModel> lista = new List<TransacaoModel>();
             TransacaoModel item;
 
+            // Filtro - utilizado pela View Extrato
+
+            string filtro = "";
+
+            if (Data != null && DataFinal != null)
+            {
+                filtro += $"AND T.DATA >= '{DateTime.Parse(Data).ToString("yyyy/MM/dd")}' AND T.DATA <= '{DateTime.Parse(DataFinal).ToString("yyyy/MM/dd")}' ";
+            }
+
+            if (Tipo != null)
+            {
+                if (Tipo != "A")
+                {
+                    filtro += $" and T.TIPO = '{Tipo}' ";
+                }
+            }
+
+            if (ContaId != 0)
+            {
+                filtro += $" and T.CONTA_ID = '{ContaId}' ";
+            }
+
+            // Fim Filtro - View Extrato
+
+
+
             string id_usuario_logado = HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
             string sql = "SELECT T.ID, T.DATA, T.TIPO, T.VALOR, T.DESCRICAO HISTORICO, T.CONTA_ID, C.NOME CONTA, " +
                     "T.PLANO_CONTAS_ID, P.DESCRICAO AS PLANO_CONTA FROM TRANSACAO T INNER JOIN CONTA C " +
                     $"ON T.CONTA_ID = C.ID INNER JOIN PLANO_CONTAS P ON T.PLANO_CONTAS_ID = P.ID WHERE T.USUARIO_ID = {id_usuario_logado} " +
-                    "ORDER BY T.DATA DESC LIMIT 10 ";
+                    $"{filtro} ORDER BY T.DATA DESC LIMIT 10 ";
 
             DAL objDAL = new DAL();
 
