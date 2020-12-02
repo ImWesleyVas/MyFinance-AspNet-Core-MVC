@@ -81,6 +81,26 @@ namespace MyFinance.Controllers
 
         public IActionResult Dashboard()
         {
+
+            List<Dashboard> lista = new Dashboard().RetornaGraficoPie();
+            string valores = "";
+            string labels = "";
+            string cores = "";
+
+            var random = new Random();
+
+            for (int i = 0; i < lista.Count; i++)
+            {
+                valores += lista[i].Total.ToString() + ", ";
+                labels += "'"+ lista[i].PlanoConta.ToString() + "', ";
+                cores += "'" + String.Format("#{0:X6}", random.Next(0x1000000)) + "', "; // = "#A197B9"
+
+            }
+
+            ViewBag.Valores = valores;
+            ViewBag.Labels = labels;
+            ViewBag.Cores = cores;
+
             return View();
         }
 

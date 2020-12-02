@@ -160,4 +160,37 @@ namespace MyFinance.Models
             new DAL().ExecutarComandoSQL($"DELETE FROM TRANSACAO WHERE ID = '{id}'");
         }
     }
+
+    public class Dashboard
+    {
+        public double Total { get; set; }
+        public string PlanoConta { get; set; }
+
+        public List<Dashboard> RetornaGraficoPie()
+        {
+            List<Dashboard> lista = new List<Dashboard>();
+            Dashboard item;
+            string sql = "select sum(T.VALOR) as TOTAL, P.DESCRICAO " +
+                        "from TRANSACAO AS T inner join PLANO_CONTAS as P " +
+                        "on T.PLANO_CONTAS_ID = P.ID " +
+                        "where T.TIPO = 'D' " +
+                        "group by P.DESCRICAO; ";
+
+            DAL objDAL = new DAL();
+            DataTable dt = new DataTable();
+            dt = objDAL.RetDataTable(sql);
+
+            for(int i = 0; i <  dt.Rows.Count; i++)
+            {
+                item = new Dashboard();
+                item.Total = double.Parse(dt.Rows[i]["Total"].ToString());
+                item.PlanoConta = dt.Rows[i]["Descricao"].ToString();
+                lista.Add(item);
+            }
+
+            return lista;
+        }
+    }
+
 }
+
