@@ -168,14 +168,34 @@ namespace MyFinance.Models
         public double Total { get; set; }
         public string PlanoConta { get; set; }
 
+        public IHttpContextAccessor HttpContextAccessor { get; set; }
+
+        public Dashboard()
+        {
+        }
+
+
+        //injeção de dependência
+        public Dashboard(IHttpContextAccessor httpContextAccessor)
+        {
+            HttpContextAccessor = httpContextAccessor;
+        }
+
+        private string IdUsuarioLogado()
+        {
+            return HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
+        }
+
         public List<Dashboard> RetornaGraficoPie()
         {
             List<Dashboard> lista = new List<Dashboard>();
             Dashboard item;
+
+            
             string sql = "select sum(T.VALOR) as TOTAL, P.DESCRICAO " +
                         "from TRANSACAO AS T inner join PLANO_CONTAS as P " +
                         "on T.PLANO_CONTAS_ID = P.ID " +
-                        "where T.TIPO = 'D' " +
+                        $"where T.TIPO = 'D' AND T.USUARIO_ID = {IdUsuarioLogado()} " +
                         "group by P.DESCRICAO; ";
 
             DAL objDAL = new DAL();
