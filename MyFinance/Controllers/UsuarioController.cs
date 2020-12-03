@@ -23,7 +23,7 @@ namespace MyFinance.Controllers
                     // preferi esta que achei mais elegante e segura, pois remove a chave completa
                     HttpContext.Session.Remove("NomeUsuarioLogado");   
                     HttpContext.Session.Remove("IdUsuarioLogado");
-
+                    
                 }
             }
             return View();

@@ -39,6 +39,11 @@ namespace MyFinance.Models
 
         }
 
+        private string IdUsuarioLogado()
+        {
+            return HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
+        }
+
         public List<TransacaoModel> ListaTransacao()
         {
 
@@ -71,10 +76,9 @@ namespace MyFinance.Models
 
 
 
-            string id_usuario_logado = HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
             string sql = "SELECT T.ID, T.DATA, T.TIPO, T.VALOR, T.DESCRICAO HISTORICO, T.CONTA_ID, C.NOME CONTA, " +
                     "T.PLANO_CONTAS_ID, P.DESCRICAO AS PLANO_CONTA FROM TRANSACAO T INNER JOIN CONTA C " +
-                    $"ON T.CONTA_ID = C.ID INNER JOIN PLANO_CONTAS P ON T.PLANO_CONTAS_ID = P.ID WHERE T.USUARIO_ID = {id_usuario_logado} " +
+                    $"ON T.CONTA_ID = C.ID INNER JOIN PLANO_CONTAS P ON T.PLANO_CONTAS_ID = P.ID WHERE T.USUARIO_ID = {IdUsuarioLogado()} " +
                     $"{filtro} ORDER BY T.DATA DESC LIMIT 10 ";
 
             DAL objDAL = new DAL();
@@ -106,10 +110,9 @@ namespace MyFinance.Models
         {
             TransacaoModel item;
 
-            string id_usuario_logado = HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
             string sql = "SELECT T.ID, T.DATA, T.TIPO, T.VALOR, T.DESCRICAO HISTORICO, T.CONTA_ID, C.NOME CONTA, " +
                     "T.PLANO_CONTAS_ID, P.DESCRICAO AS PLANO_CONTA FROM TRANSACAO T INNER JOIN CONTA C " +
-                    $"ON T.CONTA_ID = C.ID INNER JOIN PLANO_CONTAS P ON T.PLANO_CONTAS_ID = P.ID WHERE T.USUARIO_ID = {id_usuario_logado} " +
+                    $"ON T.CONTA_ID = C.ID INNER JOIN PLANO_CONTAS P ON T.PLANO_CONTAS_ID = P.ID WHERE T.USUARIO_ID = {IdUsuarioLogado()} " +
                     $"AND T.ID = '{id}'";
 
             DAL objDAL = new DAL();
@@ -131,13 +134,12 @@ namespace MyFinance.Models
 
         public void Insert()
         {
-            string id_usuario_logado = HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
             string sql = "";
             if (Id == 0)
             {
                 sql = $"INSERT INTO TRANSACAO (DATA, TIPO, VALOR, DESCRICAO, CONTA_ID, PLANO_CONTAS_ID, " +
                     $"USUARIO_ID) VALUES ('{DateTime.Parse(Data).ToString("yyyy/MM/dd")}', '{Tipo}', '{Valor}', " +
-                    $"'{Descricao}', '{ContaId}', '{PlanoContasId}', '{id_usuario_logado}')";
+                    $"'{Descricao}', '{ContaId}', '{PlanoContasId}', '{IdUsuarioLogado()}')";
             }
             else
             {
@@ -148,7 +150,7 @@ namespace MyFinance.Models
                         $"DESCRICAO = '{Descricao}', " +
                         $"CONTA_ID = '{ContaId}', " +
                         $"PLANO_CONTAS_ID = '{PlanoContasId}' " +
-                        $"WHERE USUARIO_ID = '{id_usuario_logado}' AND ID = '{Id}' ";
+                        $"WHERE USUARIO_ID = '{IdUsuarioLogado()}' AND ID = '{Id}' ";
             }
 
             DAL objDAL = new DAL();
